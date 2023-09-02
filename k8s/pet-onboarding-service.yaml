@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pet-onboarding
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+    cloud.google.com/backend-config: '{"default": "pet-onboarding-config"}'
+spec:
+  type: ClusterIP
+  selector:
+    app: pet-onboarding
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080

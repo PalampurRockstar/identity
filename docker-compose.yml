@@ -1,0 +1,62 @@
+version: "3"
+services:
+#  api-database:
+#    image: mongo:3.2.4
+#    container_name: "api-database"
+#    ports:
+#      - 27017:27017
+#    command: --smallfiles
+  api:
+    container_name: api
+    image: api
+    build: .
+    ports:
+      - 8080:8080
+    networks:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=changeme
+      - SPRING_PROFILES_ACTIVE=local
+      - SPRING_DATASOURCE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      - db-postgresql
+  db-postgresql:
+    image: postgres
+    container_name: db-postgresql
+    networks:
+      - postgres
+    ports:
+      - "5432:5432"
+    volumes:
+        - postgres:/data/postgres
+    environment:
+      POSTGRES_DB: postgres
+      PGDATA: /data/postgres
+      POSTGRES_PASSWORD: changeme
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@email.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_LISTEN_PORT: 80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "80:80"
+    networks:
+      - postgres
+
+
+
+networks:
+  postgres:
+    driver: bridge
+
+
+volumes:
+  postgres:
+  pgadmin:

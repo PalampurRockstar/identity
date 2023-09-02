@@ -1,0 +1,92 @@
+
+
+spring:
+  profiles: local
+  flyway:
+    locations: classpath:db.migration
+    baselineOnMigrate: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/identity-db
+    username: postgres
+    password: raghav
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+#  h2:
+#    console:
+#      enabled: false
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        security: DEBUG
+      hibernate:
+        SQL: debug
+        orm:
+          jdbc:
+            bind:   trace
+        type:
+          descriptor:
+            sql: trace
+  data:
+    rest:
+      base-max-page-size: '20'
+      base-default-page-size: '10'
+    mongodb:
+      uri: ${MONGO_URL:mongodb://localhost:27017/dev}
+  jackson:
+    default-property-inclusion: NON_NULL
+server:
+  port: 8998
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui-custom.html"
+    use-root-path: true
+
+
+---
+spring:
+  profiles: prod
+  datasource:
+    username:  ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:sampledb}
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${SPRING_DATASOURCE_DIALECT:org.hibernate.dialect.H2Dialect}
+  #    show-sql: true
+  h2:
+    console:
+      enabled: true
+  data:
+    rest:
+      base-max-page-size: '20'
+      base-default-page-size: '10'
+    mongodb:
+      uri: ${MONGO_URL:mongodb://localhost:27017/dev}
+  jackson:
+    default-property-inclusion: NON_NULL
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        security: DEBUG
+      hibernate:
+        SQL: debug
+        orm:
+          jdbc:
+            bind:   trace
+        type:
+          descriptor:
+            sql: trace
+

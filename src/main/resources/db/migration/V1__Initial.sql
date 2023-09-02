@@ -1,0 +1,1 @@
+create table user (id varchar(255) not null, created_date varchar(255), date_of_birth varchar(255), first_name varchar(255), last_name varchar(255), password varchar(255), updated_date varchar(255), username varchar(255), primary key (id));
