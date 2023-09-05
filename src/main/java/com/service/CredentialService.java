@@ -15,6 +15,7 @@ public interface CredentialService {
 
     UserDto findById(String id);
 
+    boolean verify(String auth);
     TokenSetDto login(CredentialDto superHero);
     TokenSetDto refresh(TokenSetDto old) throws JsonProcessingException;
 

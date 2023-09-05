@@ -59,7 +59,6 @@ public class Jwt {
     }
 
     public static  <T> T readClaim(String claims,TypeReference<T> ref) {
-        System.out.println(claims);
         ObjectMapper om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
         try {

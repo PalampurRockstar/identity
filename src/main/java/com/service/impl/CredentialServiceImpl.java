@@ -2,6 +2,7 @@ package com.service.impl;
 
 
 import com.common.util.Jwt;
+import com.exception.InvalidAccessTokenException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.model.category.ClaimType;
@@ -18,8 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.common.Constants.ACCESS_TKN_TIMEOUT;
-import static com.common.Constants.REFRESH_TKN_TIMEOUT;
+import static com.common.Constants.*;
 import static com.model.mapper.UserMapper.USER_MAPPER_INSTANCE;
 
 @Service
@@ -31,6 +31,18 @@ public class CredentialServiceImpl implements CredentialService {
         return userRepo.findAll();
     }
 
+    public boolean verify(String auth){
+        return Optional.of(auth)
+                .map(t->t.replace(BEARER+" ",""))
+                .filter(t-> !t.isEmpty())
+                .filter(Jwt::validateJwtToken)
+                .map(t->Jwt.readClaim(Jwt.decodeJwt(t),new TypeReference<ClaimDto<UserDto>>() {}))
+                .map(c->{
+                    if (c.getType().equals(ClaimType.ACCESS) && !Jwt.isJwtExpired(c.getExp()))return true;
+                    else return null;
+                })
+                .orElseThrow(()-> new InvalidAccessTokenException("InvalidToken"));
+    }
     @Override
     public UserDto findById(String id) {
         return userRepo.findById(id)
@@ -39,7 +51,6 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     public TokenSetDto refresh(TokenSetDto old) {
-        System.out.println("Inside "+old);
         return Optional.of(old)
                 .filter(t-> Jwt.validateJwtToken(t.getAccessToken()) && Jwt.validateJwtToken(t.getAccessToken()))
                 .map(t->{

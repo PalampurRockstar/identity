@@ -265,7 +265,6 @@ public class IntegrationTest {
         ResponseEntity<BreederDto> breederResponse = restTemplate.getForEntity("/breeder/"+actualBreeder.getId(), BreederDto.class);
         BreederDto getBreeder= breederResponse.getBody();
 
-        System.out.println("getBreeder: "+mapper.writeValueAsString(getBreeder));
         assertNotNull(breederResponse);
         assertThat(breederResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertTrue(getBreeder.getId().equals(actualBreeder.getId()));

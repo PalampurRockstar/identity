@@ -39,7 +39,6 @@ class UserMapperTest {
         user.setFirstName("firstName");
         user.setLastName("lastName");
         String json=om.writeValueAsString(user);
-        System.out.println("json: "+json);
         assertThat(json).isEqualTo(expectedUser);
     }
 

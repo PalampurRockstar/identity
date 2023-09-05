@@ -34,7 +34,6 @@ class JwtTest {
     void testCreateJwtAndVerify() throws JsonProcessingException {
         var expectedUserDto=UserMapper.USER_MAPPER_INSTANCE.userToUserDto(expectedUser);
         var jwt=Jwt.createToken(ACCESS_TKN_TIMEOUT,expectedUserDto,ClaimType.ACCESS);
-        System.out.println(jwt);
         assertTrue(Jwt.validateJwtToken(jwt));
         ClaimDto<UserDto> claim=Jwt.readClaim(Jwt.decodeJwt(jwt), new TypeReference<ClaimDto<UserDto>>() {});
         UserDto actuallyUserDto=claim.getInfo();

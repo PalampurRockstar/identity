@@ -1,6 +1,7 @@
 package com.config;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -12,7 +13,10 @@ import org.springframework.context.annotation.Configuration;
 public class SerializationConfig {
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        ObjectMapper om = new ObjectMapper();
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        om.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        return om;
     }
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer configureJackson() {
