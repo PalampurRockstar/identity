@@ -24,6 +24,10 @@ public class UserController {
     public ResponseEntity<?> findById(@PathVariable String id) {
         return ResponseEntity.ok().body(userService.findById(id));
     }
+    @GetMapping("/username/{userName}")
+    public ResponseEntity<?> findByUsername(@PathVariable String userName, @RequestParam(name = "limit", required = false) Integer limit) {
+        return ResponseEntity.ok().body(userService.findByUsername(userName,limit!=null?limit:0));
+    }
     @PostMapping
     public ResponseEntity<?> save(@RequestBody User User) {
         return ResponseEntity.ok().body(userService.save(User));

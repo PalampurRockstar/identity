@@ -1,15 +1,15 @@
 package com.service.impl;
 
 
+
+import com.common.Errors;
 import com.common.util.Jwt;
 import com.exception.InvalidAccessTokenException;
+import com.exception.InvalidCredentialsException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.model.category.ClaimType;
-import com.model.dto.ClaimDto;
-import com.model.dto.CredentialDto;
-import com.model.dto.TokenSetDto;
-import com.model.dto.UserDto;
+import com.model.dto.*;
 import com.model.table.User;
 import com.repository.UserRepository;
 import com.service.CredentialService;
@@ -41,7 +41,7 @@ public class CredentialServiceImpl implements CredentialService {
                     if (c.getType().equals(ClaimType.ACCESS) && !Jwt.isJwtExpired(c.getExp()))return true;
                     else return null;
                 })
-                .orElseThrow(()-> new InvalidAccessTokenException("InvalidToken"));
+                .orElseThrow(()-> new InvalidAccessTokenException(Errors.P002));
     }
     @Override
     public UserDto findById(String id) {
@@ -83,7 +83,7 @@ public class CredentialServiceImpl implements CredentialService {
                         Jwt.createToken( ACCESS_TKN_TIMEOUT,c,ClaimType.ACCESS),
                         Jwt.createToken( REFRESH_TKN_TIMEOUT,c,ClaimType.REFRESH))
                 )
-                .orElseGet(()->null);
+                .orElseThrow(()-> new InvalidCredentialsException(Errors.P001));
     }
     @Override
     public User update(String id, User user) {

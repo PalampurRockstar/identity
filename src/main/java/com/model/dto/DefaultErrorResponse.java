@@ -1,12 +1,17 @@
 package com.model.dto;
 
-import lombok.AllArgsConstructor;
+
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.common.*;
+
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class DefaultErrorResponse {
+    public DefaultErrorResponse(Errors code){
+        this.code=code.getCode();
+        this.message=code.getMessage();
+    }
+    private String code;
     private String message;
 }
